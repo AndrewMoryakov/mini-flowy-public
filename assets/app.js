@@ -197,18 +197,26 @@ class AdaptiveHeaderManager {
       nav.addEventListener('click', (e) => {
         if (isMobileDevice()) {
           // Определяем что именно кликнули:
-          // 1. Если клик по статье (.item) И НЕ внутри заголовка категории - закрываем
-          // 2. Если клик по любому элементу категории - НЕ закрываем
-          const isItemClick = e.target.classList.contains('item') || e.target.closest('.item');
           const isCategoryClick = e.target.closest('.category-header') || 
                                   e.target.closest('.category-toggle') ||
+                                  e.target.classList.contains('category-header') ||
+                                  e.target.classList.contains('category-toggle') ||
                                   e.target.classList.contains('category-icon') ||
                                   e.target.classList.contains('category-name') ||
                                   e.target.classList.contains('category-count') ||
                                   e.target.classList.contains('category-share-btn');
           
-          // Закрываем только если это клик по статье И НЕ по элементу категории
-          if (isItemClick && !isCategoryClick) {
+          const isItemClick = e.target.classList.contains('item') || e.target.closest('.item');
+          
+          // НЕ закрываем меню если:
+          // 1. Клик по любому элементу категории
+          // 2. Клик внутри самого меню навигации
+          if (isCategoryClick) {
+            return; // Не закрываем меню при клике по категории
+          }
+          
+          // Закрываем только при клике по статье
+          if (isItemClick) {
             nav.style.display = 'none';
           }
         }
@@ -218,8 +226,13 @@ class AdaptiveHeaderManager {
   
   checkHeaderOverflow() {
     if (isMobileDevice()) {
-      // На мобильных всегда показываем все кнопки
+      // На мобильных всегда показываем все кнопки, включая colorScheme
       this.restoreItemsFromMenu();
+      // Убеждаемся что кнопка цветовой темы видима на мобильных
+      const colorBtn = document.getElementById('colorScheme');
+      if (colorBtn) {
+        colorBtn.style.display = '';
+      }
       return;
     }
     
@@ -1177,7 +1190,15 @@ async function openPage(slug) {
   if (state.isFileProtocol) {
     document.getElementById('rawLink').href = p.path;
   } else {
-    document.getElementById('rawLink').href = 'content/' + p.path;
+    // В публичной версии показываем встроенный контент в новой вкладке
+    if (window.embeddedData && window.embeddedData.content && window.embeddedData.content[p.path]) {
+      const rawContent = window.embeddedData.content[p.path];
+      const blob = new Blob([rawContent], { type: 'text/markdown' });
+      document.getElementById('rawLink').href = URL.createObjectURL(blob);
+      document.getElementById('rawLink').download = p.path.split('/').pop();
+    } else {
+      document.getElementById('rawLink').href = 'content/' + p.path;
+    }
   }
 
   let md;

@@ -383,18 +383,18 @@ main {
 
 /* Стили для вложенных категорий */
 .category-level-1 {
-  background: rgba(var(--accent-rgb, 79, 184, 209), 0.02);
-  border-left: 2px solid rgba(var(--accent-rgb, 79, 184, 209), 0.1);
+  background: var(--accent-50);
+  border-left: 2px solid var(--accent-200);
 }
 
 .category-level-2 {
-  background: rgba(var(--accent-rgb, 79, 184, 209), 0.04);
-  border-left: 2px solid rgba(var(--accent-rgb, 79, 184, 209), 0.2);
+  background: var(--accent-100);
+  border-left: 2px solid var(--accent-300);
 }
 
 .category-level-3 {
-  background: rgba(var(--accent-rgb, 79, 184, 209), 0.06);
-  border-left: 2px solid rgba(var(--accent-rgb, 79, 184, 209), 0.3);
+  background: var(--accent-200);
+  border-left: 2px solid var(--accent-400);
 }
 
 /* Контент для разных уровней */
@@ -403,17 +403,17 @@ main {
 }
 
 .category-content-level-1 {
-  border-left-color: rgba(var(--accent-rgb, 79, 184, 209), 0.3);
+  border-left-color: var(--accent-300);
   margin-left: 12px;
 }
 
 .category-content-level-2 {
-  border-left-color: rgba(var(--accent-rgb, 79, 184, 209), 0.4);
+  border-left-color: var(--accent-400);
   margin-left: 18px;
 }
 
 .category-content-level-3 {
-  border-left-color: rgba(var(--accent-rgb, 79, 184, 209), 0.5);
+  border-left-color: var(--accent-500);
   margin-left: 24px;
 }
 
