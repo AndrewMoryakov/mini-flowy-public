@@ -98,6 +98,14 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow-x: hidden; /* Предотвращает горизонтальный скролл на всем сайте */
+}
+
+html, body {
+  max-width: 100vw; /* Ограничивает максимальную ширину */
+}
+
 body {
   margin: 0;
   background: var(--bg);
@@ -188,6 +196,7 @@ aside {
 
 main {
   overflow: auto;
+  min-width: 0; /* Предотвращает переполнение в flexbox/grid */
 }
 
 .pane {
@@ -559,6 +568,8 @@ article {
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
+  overflow-x: hidden; /* Предотвращает горизонтальный скролл */
+  word-wrap: break-word; /* Переносит длинные слова */
 }
 
 article pre {
@@ -567,6 +578,12 @@ article pre {
   padding: 12px;
   border-radius: 10px;
   overflow: auto;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+article pre code {
+  white-space: pre-wrap; /* Переносит длинные строки кода */
 }
 
 article h1,
@@ -597,9 +614,10 @@ article h3 {
 
 .mermaid {
   width: 100%;
+  max-width: 100%;
   /* высота управляется MermaidRenderer как константа = 1/3 viewport */
   position: relative;
-  overflow: hidden;
+  overflow: auto; /* Позволяет скроллить диаграмму если она большая */
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface-primary);
@@ -612,12 +630,14 @@ article h3 {
   max-height: none !important;
   display: block;
   pointer-events: auto;
+  min-width: 0; /* Предотвращает переполнение */
 }
 
 /* Мобильные устройства */
 @media (max-width: 900px) {
   body {
     grid-template-columns: 1fr;
+    overflow-x: hidden; /* Убираем горизонтальный скролл */
   }
   
   aside {
@@ -684,6 +704,16 @@ article h3 {
   .merwrap {
     margin: 12px 0;
     padding: 6px;
+    overflow-x: auto; /* Горизонтальный скролл только для диаграмм */
+  }
+
+  .mermaid {
+    min-height: 200px; /* Минимальная высота на мобильных */
+    max-height: 50vh; /* Максимальная высота */
+  }
+  
+  .mermaid svg {
+    min-width: 300px; /* Минимальная ширина для читаемости */
   }
 
   .search input {

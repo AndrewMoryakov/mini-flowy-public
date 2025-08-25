@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mini Flowy</title>
+    <link>https://andrewmoryakov.github.io/mini-flowy-public/</link>
+    <description>Легкий и быстрый Markdown + Mermaid просмотрщик с панорамированием и зумом диаграмм</description>
+    <language>ru</language>
+    <lastBuildDate>Mon, 25 Aug 2025 13:42:05 GMT</lastBuildDate>
+    <generator>Mini Flowy v2.1.0</generator>
+    <atom:link href="https://andrewmoryakov.github.io/mini-flowy-public/rss.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Введение</title>
+      <link>https://andrewmoryakov.github.io/mini-flowy-public/#/p/intro</link>
+      <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/intro</guid>
+      <description>Статья из категории "Начало работы" в Mini Flowy</description>
+      <category>Начало работы</category>
+      <pubDate>Mon, 25 Aug 2025 13:42:05 GMT</pubDate>
+    </item>
+    <item>
+      <title>Установка</title>
+      <link>https://andrewmoryakov.github.io/mini-flowy-public/#/p/installation</link>
+      <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/installation</guid>
+      <description>Статья из категории "Начало работы" в Mini Flowy</description>
+      <category>Начало работы</category>
+      <pubDate>Mon, 25 Aug 2025 13:42:05 GMT</pubDate>
+    </item>
+    <item>
+      <title>Основы Markdown</title>
+      <link>https://andrewmoryakov.github.io/mini-flowy-public/#/p/basic-markdown</link>
+      <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/basic-markdown</guid>
+      <description>Статья из категории "Туториалы" в Mini Flowy</description>
+      <category>Туториалы</category>
+      <pubDate>Mon, 25 Aug 2025 13:42:05 GMT</pubDate>
+    </item>
+    <item>
+      <title>Примеры диаграмм</title>
+      <link>https://andrewmoryakov.github.io/mini-flowy-public/#/p/flowcharts</link>
+      <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/flowcharts</guid>
+      <description>Статья из категории "Примеры" в Mini Flowy</description>
+      <category>Примеры</category>
+      <pubDate>Mon, 25 Aug 2025 13:42:05 GMT</pubDate>
+    </item>
+  </channel>
+</rss>
