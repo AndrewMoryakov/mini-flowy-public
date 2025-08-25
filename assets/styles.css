@@ -740,8 +740,19 @@ article h3 {
     font-size: 12px;
   }
   
-  /* Остальные кнопки скрываем */
-  #rawLink, #shareBtn, #colorScheme, label {
+  /* На мобильных показываем основные кнопки, но меньшего размера */
+  #headerActions {
+    display: flex !important;
+    gap: 4px;
+  }
+  
+  #theme, #rawLink, #shareBtn {
+    display: inline-block;
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+  
+  #colorScheme, label {
     display: none;
   }
   
@@ -905,6 +916,132 @@ footer {
 /* Темная тема для футера */
 [data-theme="dark"] footer {
   background: var(--surface-tertiary);
+}
+
+/* === iOS-СТИЛЬ ВЫПАДАЮЩЕЕ МЕНЮ === */
+.more-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: none;
+  pointer-events: none;
+}
+
+.more-menu.show {
+  display: block;
+  pointer-events: all;
+}
+
+.more-menu-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: background-color 0.3s ease;
+}
+
+.more-menu.show .more-menu-backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.more-menu-content {
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  background: var(--surface-primary);
+  border-radius: 16px 16px 8px 8px;
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.2);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+}
+
+.more-menu.show .more-menu-content {
+  transform: translateY(0);
+}
+
+.more-menu-header {
+  padding: 16px 20px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.more-menu-items {
+  padding: 0;
+}
+
+.more-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  color: var(--text-primary);
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.more-menu-item:hover {
+  background: var(--hover-overlay);
+}
+
+.more-menu-item:not(:last-child) {
+  border-bottom: 1px solid var(--border);
+}
+
+.more-menu-item-icon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+.more-menu-cancel {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  margin: 8px 0 0 0;
+  background: var(--surface-primary);
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.more-menu-cancel:hover {
+  background: var(--hover-overlay);
+}
+
+.more-btn {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 6px 12px;
+  line-height: 1;
+}
+
+/* Темная тема для меню */
+[data-theme="dark"] .more-menu-content {
+  background: var(--surface-secondary);
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="dark"] .more-menu-cancel {
+  background: var(--surface-secondary);
 }
 
 /* Исправления для touch-устройств (смартфоны в любом режиме) */

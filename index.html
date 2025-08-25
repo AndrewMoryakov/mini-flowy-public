@@ -78,15 +78,22 @@
         </svg>
         Mini Flowy
       </div>
-      <span class="muted">Markdown + Mermaid (pan/zoom)</span>
     </div>
-    <div class="topbar">
-      <label style="display:flex;align-items:center;gap:6px" class="muted">
-        <input type="checkbox" id="pz" checked/> Pan&Zoom
-      </label>
+    <div class="topbar" id="headerActions">
       <button id="theme" class="btn">🌓</button>
       <a id="rawLink" class="btn" href="#" target="_blank" rel="noopener">RAW</a>
       <button id="shareBtn" class="btn">📋 Поделиться</button>
+      <button id="moreBtn" class="btn more-btn" style="display: none;">⋯</button>
+    </div>
+    
+    <!-- iOS-стиль выпадающее меню -->
+    <div id="moreMenu" class="more-menu">
+      <div class="more-menu-backdrop"></div>
+      <div class="more-menu-content">
+        <div class="more-menu-header">Дополнительно</div>
+        <div id="moreMenuItems" class="more-menu-items"></div>
+        <button class="more-menu-cancel">Отмена</button>
+      </div>
     </div>
   </header>
 

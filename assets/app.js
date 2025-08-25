@@ -92,6 +92,177 @@ function createColorSchemeSelector() {
 // Инициализируем кнопку после загрузки DOM
 setTimeout(createColorSchemeSelector, 100);
 
+// Управление адаптивным header меню
+class AdaptiveHeaderManager {
+  constructor() {
+    this.moreBtn = document.getElementById('moreBtn');
+    this.moreMenu = document.getElementById('moreMenu');
+    this.moreMenuItems = document.getElementById('moreMenuItems');
+    this.headerActions = document.getElementById('headerActions');
+    this.hiddenItems = [];
+    
+    this.init();
+  }
+  
+  init() {
+    // Обработчики для выпадающего меню
+    if (this.moreBtn) {
+      this.moreBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.showMoreMenu();
+      });
+    }
+    
+    // Закрытие меню
+    if (this.moreMenu) {
+      this.moreMenu.addEventListener('click', (e) => {
+        if (e.target === this.moreMenu || e.target.classList.contains('more-menu-backdrop') || e.target.classList.contains('more-menu-cancel')) {
+          this.hideMoreMenu();
+        }
+      });
+    }
+    
+    // Обработчики для sidebar menu
+    this.setupSidebarHandlers();
+    
+    // Проверяем размер при загрузке и изменении размера
+    window.addEventListener('resize', () => this.checkHeaderOverflow());
+    setTimeout(() => this.checkHeaderOverflow(), 100);
+  }
+  
+  setupSidebarHandlers() {
+    const toggleNav = document.getElementById('toggleNav');
+    const nav = document.getElementById('nav');
+    
+    if (toggleNav && nav) {
+      toggleNav.addEventListener('click', (e) => {
+        e.stopPropagation();
+        nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
+      });
+      
+      // Закрытие sidebar по клику вне его
+      document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 900 && nav.style.display === 'block') {
+          if (!nav.contains(e.target) && e.target !== toggleNav) {
+            nav.style.display = 'none';
+          }
+        }
+      });
+      
+      // Закрытие sidebar при клике на элементы меню
+      nav.addEventListener('click', (e) => {
+        if (window.innerWidth <= 900 && e.target.classList.contains('item')) {
+          nav.style.display = 'none';
+        }
+      });
+    }
+  }
+  
+  checkHeaderOverflow() {
+    if (window.innerWidth <= 900) return; // На мобильных не используем это меню
+    
+    const header = document.querySelector('header');
+    const availableWidth = header.offsetWidth - 40; // Отступы
+    const brandWidth = document.querySelector('.brand').offsetWidth;
+    const actionsWidth = this.headerActions.scrollWidth;
+    
+    if (brandWidth + actionsWidth > availableWidth) {
+      this.moveItemsToMenu();
+    } else {
+      this.restoreItemsFromMenu();
+    }
+  }
+  
+  moveItemsToMenu() {
+    const items = this.headerActions.children;
+    const itemsToHide = [];
+    
+    // Начинаем с менее важных элементов
+    const priority = ['shareBtn', 'rawLink', 'colorScheme'];
+    
+    for (const id of priority) {
+      const element = document.getElementById(id);
+      if (element && element.style.display !== 'none') {
+        itemsToHide.push({
+          element: element,
+          id: id,
+          text: element.textContent || element.title,
+          icon: this.getIconForAction(id)
+        });
+        element.style.display = 'none';
+        
+        // Проверяем, достаточно ли места после скрытия элемента
+        if (this.hasEnoughSpace()) break;
+      }
+    }
+    
+    if (itemsToHide.length > 0) {
+      this.hiddenItems = itemsToHide;
+      this.moreBtn.style.display = 'block';
+      this.updateMoreMenu();
+    }
+  }
+  
+  restoreItemsFromMenu() {
+    this.hiddenItems.forEach(item => {
+      item.element.style.display = '';
+    });
+    this.hiddenItems = [];
+    this.moreBtn.style.display = 'none';
+  }
+  
+  hasEnoughSpace() {
+    const header = document.querySelector('header');
+    const availableWidth = header.offsetWidth - 40;
+    const brandWidth = document.querySelector('.brand').offsetWidth;
+    const actionsWidth = this.headerActions.scrollWidth;
+    return brandWidth + actionsWidth <= availableWidth;
+  }
+  
+  getIconForAction(id) {
+    const icons = {
+      'shareBtn': '📋',
+      'rawLink': '📄',
+      'colorScheme': '🎨',
+      'theme': '🌓'
+    };
+    return icons[id] || '•';
+  }
+  
+  updateMoreMenu() {
+    this.moreMenuItems.innerHTML = '';
+    
+    this.hiddenItems.forEach(item => {
+      const menuItem = document.createElement('button');
+      menuItem.className = 'more-menu-item';
+      menuItem.innerHTML = `
+        <span class="more-menu-item-icon">${item.icon}</span>
+        <span>${item.text}</span>
+      `;
+      menuItem.addEventListener('click', () => {
+        item.element.click();
+        this.hideMoreMenu();
+      });
+      this.moreMenuItems.appendChild(menuItem);
+    });
+  }
+  
+  showMoreMenu() {
+    this.moreMenu.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  
+  hideMoreMenu() {
+    this.moreMenu.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+}
+
+// Инициализируем адаптивный header
+setTimeout(() => {
+  new AdaptiveHeaderManager();
+}, 100);
+
 // Исправляем проблему с 100vh на мобильных устройствах
 function fixViewportHeight() {
   // Устанавливаем CSS custom property с реальной высотой viewport
