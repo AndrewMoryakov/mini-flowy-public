@@ -385,8 +385,6 @@ async function loadManifest() {
     state.pages = await res.json();
   }
   
-  console.log('Loaded pages:', state.pages.length, state.pages);
-  
   // Инициализируем отфильтрованные страницы всеми страницами
   state.filteredPages = state.pages;
   
@@ -400,11 +398,8 @@ function renderList(items, activeSlug) {
   const el = document.getElementById('list');
   el.innerHTML = '';
   
-  console.log('Rendering list with items:', items.length, items);
-  
   // Группируем страницы по категориям
   const categorized = groupByCategory(items);
-  console.log('Categorized:', categorized);
   
   // Если нет категорий, показываем обычный список
   if (categorized.uncategorized && categorized.uncategorized.length === items.length) {
