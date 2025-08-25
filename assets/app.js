@@ -1084,16 +1084,22 @@ async function openPage(slug) {
   }
   
   renderList(state.pages, slug);
-  if (window.innerWidth < 900) nav.style.display = 'none';
+  if (window.innerWidth < 900) {
+    const nav = document.getElementById('nav');
+    if (nav) nav.style.display = 'none';
+  }
   root.scrollTop = 0;
 }
 
 // Переключатель Pan&Zoom
-document.getElementById('pz').onchange = (e) => {
-  state.pzOn = e.target.checked;
-  // При отключении/включении — просто пересоздадим страницу
-  openPage(getSlugFromHash());
-};
+const pzToggle = document.getElementById('pz');
+if (pzToggle) {
+  pzToggle.onchange = (e) => {
+    state.pzOn = e.target.checked;
+    // При отключении/включении — просто пересоздадим страницу
+    openPage(getSlugFromHash());
+  };
+}
 
 // Инициализация состояния категорий из localStorage
 function initializeState() {
