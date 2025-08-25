@@ -100,14 +100,19 @@
 
 html {
   overflow-x: hidden; /* Предотвращает горизонтальный скролл на всем сайте */
+  height: 100%;
+  /* Исправляет проблемы с 100vh на мобильных */
+  height: 100vh;
+  height: 100dvh;
 }
 
 html, body {
   max-width: 100vw; /* Ограничивает максимальную ширину */
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
   background: var(--bg);
   color: var(--fg);
   font: 15px/1.55 system-ui, "Segoe UI", Roboto, Arial, sans-serif;
@@ -115,6 +120,11 @@ body {
   grid-template-columns: 300px 1fr;
   grid-template-rows: auto 1fr auto;
   height: 100vh;
+  height: calc(var(--vh, 1vh) * 100); /* Используем JS переменную для точной высоты */
+  height: 100dvh; /* Fallback для поддерживающих браузеров */
+  max-height: 100vh;
+  max-height: calc(var(--vh, 1vh) * 100);
+  max-height: 100dvh;
 }
 
 /* Шапка */
@@ -197,6 +207,9 @@ aside {
 main {
   overflow: auto;
   min-width: 0; /* Предотвращает переполнение в flexbox/grid */
+  min-height: 0; /* Позволяет main сжиматься при необходимости */
+  display: flex;
+  flex-direction: column;
 }
 
 .pane {
@@ -570,6 +583,8 @@ article {
   padding: 20px;
   overflow-x: hidden; /* Предотвращает горизонтальный скролл */
   word-wrap: break-word; /* Переносит длинные слова */
+  flex: 1; /* Заполняет доступное пространство в flex-контейнере main */
+  min-height: 0; /* Позволяет статье сжиматься */
 }
 
 article pre {
@@ -635,9 +650,16 @@ article h3 {
 
 /* Мобильные устройства */
 @media (max-width: 900px) {
+  html, body {
+    height: 100%;
+    min-height: 100vh;
+    min-height: 100dvh; /* Динамическая высота для мобильных */
+  }
+  
   body {
     grid-template-columns: 1fr;
     overflow-x: hidden; /* Убираем горизонтальный скролл */
+    position: relative;
   }
   
   aside {
@@ -724,6 +746,10 @@ article h3 {
   
   footer {
     grid-column: 1 / -1;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    margin-top: auto;
   }
 }
 
@@ -734,6 +760,9 @@ footer {
   background: var(--surface-secondary);
   padding: 12px 20px;
   font-size: 12px;
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
 }
 
 .footer-content {
@@ -773,4 +802,29 @@ footer {
 /* Темная тема для футера */
 [data-theme="dark"] footer {
   background: var(--surface-tertiary);
+}
+
+/* Исправления для touch-устройств (смартфоны в любом режиме) */
+@media (hover: none) and (pointer: coarse) {
+  /* Фиксируем размер названий категорий на touch-устройствах */
+  .category-name {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+  }
+  
+  /* Исправляем высоту на touch-устройствах */
+  body {
+    height: calc(var(--vh, 1vh) * 100);
+    max-height: calc(var(--vh, 1vh) * 100);
+  }
+  
+  /* Убираем пробелы внизу */
+  html, body {
+    overflow: hidden;
+  }
+  
+  main {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch; /* Плавная прокрутка на iOS */
+  }
 }

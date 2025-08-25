@@ -92,6 +92,20 @@ function createColorSchemeSelector() {
 // Инициализируем кнопку после загрузки DOM
 setTimeout(createColorSchemeSelector, 100);
 
+// Исправляем проблему с 100vh на мобильных устройствах
+function fixViewportHeight() {
+  // Устанавливаем CSS custom property с реальной высотой viewport
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+// Исправляем высоту при загрузке и изменении размера
+window.addEventListener('load', fixViewportHeight);
+window.addEventListener('resize', fixViewportHeight);
+window.addEventListener('orientationchange', () => {
+  setTimeout(fixViewportHeight, 100); // Задержка для корректного определения размера
+});
+
 // Функции для шаринга и SEO
 function updateMetaTags(page) {
   // Используем правильный baseUrl для публичной версии
