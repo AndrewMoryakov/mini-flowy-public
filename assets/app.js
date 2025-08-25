@@ -14,7 +14,11 @@ const state = {
   isFileProtocol: location.protocol === 'file:',
   activeTags: new Set(), // Активные фильтры по тегам
   filteredPages: [], // Отфильтрованные страницы
-  collapsedCategories: new Set() // Свернутые категории
+  collapsedCategories: new Set(), // Свернутые категории
+  isolatedMode: false,
+  isolatedCategory: null,
+  isolatedPages: [],
+  routeInitialized: false
 };
 
 // Управление темами и цветовыми схемами
@@ -155,34 +159,29 @@ async function shareContent(title, url, buttonElement = null) {
     // Копируем в буфер обмена
     try {
       await navigator.clipboard.writeText(url);
-      // Показываем уведомление
-      if (buttonElement) {
-        const originalText = buttonElement.textContent;
-        buttonElement.textContent = '✓ Скопировано!';
-        buttonElement.style.background = 'var(--success-500)';
-        buttonElement.style.color = 'white';
-        setTimeout(() => {
-          buttonElement.textContent = originalText;
-          buttonElement.style.background = '';
-          buttonElement.style.color = '';
-        }, 2000);
-      } else {
-        // Если нет кнопки, показываем alert
-        alert('✓ Ссылка скопирована в буфер обмена!');
-      }
+      // Небольшой тоаст вместо alert
+      showToast('Ссылка скопирована');
     } catch (err) {
       // Fallback для старых браузеров
-      prompt('Скопируйте ссылку:', url);
+      showToast('Скопируйте ссылку вручную: ' + url);
     }
   }
 }
 
-// Кнопка "Поделиться"
+// Кнопка "Поделиться" с опциями изоляции
 document.getElementById('shareBtn').onclick = async () => {
-  // Используем текущий URL как есть для статей
-  const currentUrl = location.href;
   const btn = document.getElementById('shareBtn');
-  await shareContent(document.title, currentUrl, btn);
+  
+  // Создаем простое меню выбора
+  const choice = await showShareMenu('статьей');
+  
+  let url = location.href;
+  if (choice === 'isolated') {
+    // Добавляем скрытый флаг изоляции
+    url = url.replace('#', '##');
+  }
+  
+  await shareContent(document.title, url, btn);
 };
 
 // Навигация
@@ -245,8 +244,13 @@ function renderList(items, activeSlug) {
       </div>
     `;
     
-    // Обработчик сворачивания/разворачивания
-    categoryHeader.onclick = () => toggleCategory(categoryId);
+    // Обработчик сворачивания/разворачивания только для основной области
+    categoryHeader.onclick = (event) => {
+      // Проверяем, что клик НЕ по кнопке шаринга
+      if (!event.target.classList.contains('category-share-btn')) {
+        toggleCategory(categoryId);
+      }
+    };
     
     el.appendChild(categoryHeader);
     
@@ -338,6 +342,11 @@ function openCategory(categorySlug) {
   // Получаем оригинальное название категории для отображения
   const actualCategoryName = categoryPages[0]?.category || 'Без категории';
   
+  // Применяем изолированный режим для категорий если нужно
+  if (state.isolatedMode) {
+    applyIsolatedCategoryMode(actualCategoryName, categoryPages);
+  }
+  
   // Обновляем мета-теги для категории
   updateMetaTagsForCategory(actualCategoryName, categoryPages);
   
@@ -398,6 +407,23 @@ function showCategoryNotFound(categoryName) {
   `;
 }
 
+// Хелпер: обновление/создание meta-тега (без падений, если отсутствует)
+function updateMetaTag(key, value) {
+  const isProperty = key.includes(':');
+  const selector = isProperty ? `meta[property="${key}"]` : `meta[name="${key}"]`;
+  let el = document.querySelector(selector);
+  if (!el) {
+    el = document.createElement('meta');
+    if (isProperty) {
+      el.setAttribute('property', key);
+    } else {
+      el.setAttribute('name', key);
+    }
+    document.head.appendChild(el);
+  }
+  el.setAttribute('content', value);
+}
+
 // Обновление мета-тегов для категории
 function updateMetaTagsForCategory(categoryName, pages) {
   const title = `${categoryName} - Mini Flowy`;
@@ -441,6 +467,56 @@ function highlightActiveCategory(categoryName) {
   });
 }
 
+// Добавление кнопки возврата в изолированном режиме
+function addReturnButton(page) {
+  const content = document.getElementById('content');
+  const returnBar = document.createElement('div');
+  returnBar.className = 'return-bar';
+  returnBar.innerHTML = `
+    <div class="return-bar-content">
+      <button class="btn-return" onclick="exitIsolatedMode()">
+        ← Вернуться к навигации
+      </button>
+      <span class="page-info">${page.icon || '📄'} ${page.title}</span>
+    </div>
+  `;
+  content.parentNode.insertBefore(returnBar, content);
+}
+
+// Добавление кнопки возврата для категории
+function addCategoryReturnButton(categoryName) {
+  const content = document.getElementById('content');
+  const returnBar = document.createElement('div');
+  returnBar.className = 'return-bar';
+  returnBar.innerHTML = `
+    <div class="return-bar-content">
+      <button class="btn-return" onclick="exitIsolatedMode()">
+        ← Вернуться к навигации
+      </button>
+      <span class="page-info">📁 Категория: ${categoryName}</span>
+    </div>
+  `;
+  content.parentNode.insertBefore(returnBar, content);
+}
+
+// Применение изолированного режима для статей
+function applyIsolatedMode() {
+  document.body.classList.add('isolated-mode');
+  // Скрываем боковое меню полностью
+  const aside = document.querySelector('aside');
+  if (aside) aside.style.display = 'none';
+}
+
+// Применение изолированного режима для категорий
+function applyIsolatedCategoryMode(categoryName, categoryPages) {
+  // Показываем только эту категорию в меню
+  state.isolatedCategory = categoryName;
+  state.isolatedPages = categoryPages;
+  
+  // Перерендериваем список только с этой категорией
+  renderList(categoryPages, state.currentSlug);
+}
+
 // Поделиться категорией
 async function shareCategoryPage(categoryName, event) {
   // Находим кнопку, которая была нажата
@@ -463,26 +539,102 @@ async function shareCategoryPage(categoryName, event) {
   await shareContent(title, url, button);
 }
 
-// Поделиться категорией (из сайдбара)
+// Создание меню выбора режима шаринга
+function showShareMenu(itemType) {
+  // Простой CSS для временного меню
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5); z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+  `;
+  
+  const menu = document.createElement('div');
+  menu.style.cssText = `
+    background: white; border-radius: 12px; padding: 24px;
+    max-width: 400px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  `;
+  
+  menu.innerHTML = `
+    <h3 style="margin: 0 0 16px 0;">Поделиться ${itemType}</h3>
+    <div style="display: flex; gap: 12px;">
+      <button id="shareNormal" style="flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; cursor: pointer;">
+        📄 Обычный просмотр
+      </button>
+      <button id="shareIsolated" style="flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; cursor: pointer;">
+        🎯 Изолированный просмотр
+      </button>
+    </div>
+  `;
+  
+  overlay.appendChild(menu);
+  document.body.appendChild(overlay);
+  
+  return new Promise((resolve) => {
+    menu.querySelector('#shareNormal').onclick = () => {
+      document.body.removeChild(overlay);
+      resolve('normal');
+    };
+    
+    menu.querySelector('#shareIsolated').onclick = () => {
+      document.body.removeChild(overlay);
+      resolve('isolated');
+    };
+    
+    overlay.onclick = (e) => {
+      if (e.target === overlay) {
+        document.body.removeChild(overlay);
+        resolve('normal');
+      }
+    };
+  });
+}
+
+// Поделиться категорией (из сайдбара) с опциями изоляции  
 async function shareCategory(categoryName, event) {
   // Находим кнопку, которая была нажата
   const button = event ? event.target : null;
   
   const categorySlug = createSafeSlug(categoryName);
   
-  // Генерируем правильный URL в зависимости от протокола
-  let url;
+  // Генерируем URL
+  let baseUrl;
   if (window.location.protocol === 'file:') {
-    // Для локальной работы используем полный путь к файлу
-    url = `${window.location.href.split('#')[0]}#/category/${categorySlug}`;
+    baseUrl = `${window.location.href.split('#')[0]}`;
   } else {
-    // Для веб-серверов используем стандартный подход
-    url = `${window.location.origin}${window.location.pathname}#/category/${categorySlug}`;
+    baseUrl = `${window.location.origin}${window.location.pathname}`;
+  }
+  
+  // Показываем меню выбора
+  const choice = await showShareMenu('категорией');
+  
+  let url;
+  if (choice === 'isolated') {
+    // Добавляем скрытый флаг изоляции  
+    url = `${baseUrl}##/category/${categorySlug}`;
+  } else {
+    url = `${baseUrl}#/category/${categorySlug}`;
   }
   
   const title = `${categoryName} - Mini Flowy`;
   
   await shareContent(title, url, button);
+}
+
+// Простой toast (без alert/prompt)
+function showToast(text) {
+  const id = 'mini-flowy-toast';
+  let el = document.getElementById(id);
+  if (!el) {
+    el = document.createElement('div');
+    el.id = id;
+    el.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(20,20,20,.9);color:#fff;padding:10px 14px;border-radius:8px;z-index:9999;font-size:14px;opacity:0;transition:opacity .2s ease';
+    document.body.appendChild(el);
+  }
+  el.textContent = text;
+  requestAnimationFrame(()=>{ el.style.opacity = '1'; });
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>{ el.style.opacity = '0'; }, 2000);
 }
 
 // Рендеринг простого списка (без категорий)
@@ -516,8 +668,9 @@ function toggleCategory(categoryId) {
 
 // Рендеринг тегов
 function renderTags() {
+  const source = getBasePagesForRendering();
   const all = new Set();
-  state.pages.forEach(p => (p.tags || []).forEach(t => all.add(t)));
+  source.forEach(p => (p.tags || []).forEach(t => all.add(t)));
   const el = document.getElementById('tags');
   
   // Создаем контейнер для активных фильтров и кнопки сброса
@@ -573,10 +726,11 @@ function toggleTagFilter(tag) {
 
 // Применение фильтров
 function applyFilters() {
+  const base = getBasePagesForRendering();
   if (state.activeTags.size === 0) {
-    state.filteredPages = state.pages;
+    state.filteredPages = base;
   } else {
-    state.filteredPages = state.pages.filter(page => {
+    state.filteredPages = base.filter(page => {
       const pageTags = page.tags || [];
       return [...state.activeTags].every(activeTag => pageTags.includes(activeTag));
     });
@@ -587,14 +741,16 @@ function applyFilters() {
 // Поиск
 document.getElementById('q').addEventListener('input', e => {
   const q = e.target.value.trim();
+  const base = getBasePagesForRendering();
   if (!q) { 
-    // Если поиск пустой, показываем отфильтрованные по тегам страницы
-    renderList(state.filteredPages, getSlugFromHash()); 
+    // Если поиск пустой, показываем отфильтрованные (с учетом изоляции) страницы
+    const toShow = state.activeTags.size > 0 ? state.filteredPages : base;
+    renderList(toShow, getSlugFromHash()); 
     return; 
   }
   
-  // Ищем среди отфильтрованных по тегам страниц
-  const searchSource = state.filteredPages.length > 0 ? state.filteredPages : state.pages;
+  // Ищем с учетом изоляции и активных фильтров
+  const searchSource = state.activeTags.size > 0 ? state.filteredPages : base;
   const fuse = new Fuse(searchSource, { keys: ['title', 'tags', 'slug'], threshold: 0.35, ignoreLocation: true });
   const res = fuse.search(q).map(r => r.item);
   renderList(res);
@@ -606,9 +762,45 @@ function getSlugFromHash() {
   return m ? decodeURIComponent(m[1]) : (state.pages[0]?.slug);
 }
 
+// Базовый источник страниц для рендера (учитывает изоляцию)
+function getBasePagesForRendering() {
+  return (state.isolatedMode && state.isolatedCategory) ? state.isolatedPages : state.pages;
+}
+
+// Проверка изолированного режима из URL
+function getIsolatedModeFromURL() {
+  const hash = window.location.hash;
+  
+  // Проверяем двойной хеш для изолированного режима
+  if (hash.includes('##')) {
+    const parts = hash.split('##');
+    return {
+      isolated: true,
+      route: '#' + parts[1] // восстанавливаем нормальный маршрут
+    };
+  }
+  
+  return {
+    isolated: false,
+    route: hash
+  };
+}
+
 // Роутинг
 function handleRoute() {
-  const hash = location.hash.substring(1);
+  // Проверяем изолированный режим
+  const urlInfo = getIsolatedModeFromURL();
+  const wasIsolated = false;
+  
+  if (urlInfo.isolated) {
+    // Изолированная ссылка — работаем в изоляции, URL не переписываем
+    state.isolatedMode = true;
+  } else {
+    // Обычная ссылка — выходим из изоляции
+    state.isolatedMode = false;
+  }
+  
+  const hash = urlInfo.route.substring(1);
   
   if (hash.startsWith('/p/')) {
     const slug = hash.substring(3);
@@ -640,6 +832,14 @@ async function openPage(slug) {
 
   // Обновляем meta-теги и заголовок для текущей страницы
   updateMetaTags(p);
+  
+  // Запоминаем текущую страницу
+  state.currentSlug = slug;
+  
+  // Изолированный режим для страниц: скрыть навигацию
+  if (state.isolatedMode) {
+    applyIsolatedMode();
+  }
 
   document.getElementById('rawLink').href = p.path;
 
@@ -718,6 +918,8 @@ function initializeState() {
       console.warn('Failed to parse collapsed categories from localStorage');
     }
   }
+  
+  // (removed) сохранение режима изоляции — теперь только по URL флагу
 }
 
 // Инициализация приложения
