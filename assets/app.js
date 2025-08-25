@@ -373,11 +373,6 @@ document.getElementById('shareBtn').onclick = async () => {
   await shareContent(document.title, url, btn);
 };
 
-// Навигация
-const nav = document.getElementById('nav');
-document.getElementById('toggleNav').onclick = () => {
-  nav.style.display = (nav.style.display === 'block') ? 'none' : 'block';
-};
 
 // Загрузка манифеста
 async function loadManifest() {

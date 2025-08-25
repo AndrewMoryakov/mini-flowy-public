@@ -202,6 +202,10 @@ header {
   flex-shrink: 1;
 }
 
+#headerActions {
+  position: relative; /* Для позиционирования выпадающего меню */
+}
+
 .mobile {
   display: none;
 }
@@ -911,14 +915,13 @@ footer {
 
 /* === iOS-СТИЛЬ ВЫПАДАЮЩЕЕ МЕНЮ === */
 .more-menu {
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: absolute;
+  top: 100%;
   right: 0;
-  bottom: 0;
   z-index: 1000;
   display: none;
   pointer-events: none;
+  margin-top: 8px;
 }
 
 .more-menu.show {
@@ -941,30 +944,23 @@ footer {
 }
 
 .more-menu-content {
-  position: absolute;
-  bottom: 0;
-  left: 16px;
-  right: 16px;
+  position: relative;
   background: var(--surface-primary);
-  border-radius: 16px 16px 8px 8px;
-  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.2);
-  transform: translateY(100%);
-  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  min-width: 180px;
   overflow: hidden;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .more-menu.show .more-menu-content {
-  transform: translateY(0);
+  opacity: 1;
+  transform: scale(1);
 }
 
-.more-menu-header {
-  padding: 16px 20px 12px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-align: center;
-  border-bottom: 1px solid var(--border);
-}
 
 .more-menu-items {
   padding: 0;
@@ -1002,20 +998,21 @@ footer {
 .more-menu-cancel {
   display: block;
   width: 100%;
-  padding: 16px;
-  margin: 8px 0 0 0;
-  background: var(--surface-primary);
+  padding: 8px;
+  margin: 0;
+  background: transparent;
   border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--accent);
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: background-color 0.2s ease;
+  text-align: center;
 }
 
 .more-menu-cancel:hover {
   background: var(--hover-overlay);
+  color: var(--text-primary);
 }
 
 .more-btn {
@@ -1023,6 +1020,25 @@ footer {
   font-weight: bold;
   padding: 6px 12px;
   line-height: 1;
+  background: rgba(var(--accent-rgb, 79, 184, 209), 0.1);
+  border: 1px solid rgba(var(--accent-rgb, 79, 184, 209), 0.3);
+  transition: all 0.2s ease;
+}
+
+.more-btn:hover {
+  background: rgba(var(--accent-rgb, 79, 184, 209), 0.15);
+  border-color: rgba(var(--accent-rgb, 79, 184, 209), 0.5);
+}
+
+/* Темная тема для кнопки more */
+[data-theme="dark"] .more-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .more-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Темная тема для меню */
