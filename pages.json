@@ -1,0 +1,52 @@
+[
+  {
+    "title": "Введение",
+    "slug": "intro",
+    "path": "content/getting-started/intro.md",
+    "category": "Начало работы",
+    "icon": "🚀",
+    "tags": [
+      "overview",
+      "start"
+    ],
+    "public": true
+  },
+  {
+    "title": "Установка",
+    "slug": "installation",
+    "path": "content/getting-started/installation.md",
+    "category": "Начало работы",
+    "icon": "🚀",
+    "tags": [
+      "setup",
+      "install"
+    ],
+    "public": true
+  },
+  {
+    "title": "Основы Markdown",
+    "slug": "basic-markdown",
+    "path": "content/tutorials/basic-markdown.md",
+    "category": "Туториалы",
+    "icon": "📚",
+    "tags": [
+      "markdown",
+      "basics",
+      "tutorial"
+    ],
+    "public": true
+  },
+  {
+    "title": "Примеры диаграмм",
+    "slug": "flowcharts",
+    "path": "content/examples/flowcharts.md",
+    "category": "Примеры",
+    "icon": "🎨",
+    "tags": [
+      "mermaid",
+      "flowchart",
+      "examples"
+    ],
+    "public": true
+  }
+]

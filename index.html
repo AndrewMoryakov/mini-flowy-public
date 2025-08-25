@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Mini Flowy</title>
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="">
+<meta property="og:title" content="Mini Flowy">
+<meta property="og:description" content="Легкий и быстрый Markdown + Mermaid просмотрщик">
+<meta property="og:image" content="">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="">
+<meta property="twitter:title" content="Mini Flowy">
+<meta property="twitter:description" content="Легкий и быстрый Markdown + Mermaid просмотрщик">
+<meta property="twitter:image" content="">
+
+<!-- General -->
+<meta name="description" content="Легкий и быстрый Markdown + Mermaid просмотрщик с панорамированием и зумом диаграмм">
+<meta name="author" content="Mini Flowy">
+<link rel="canonical" href="">
+
+<!-- Styles -->
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/color-schemes.css">
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <button id="toggleNav" class="btn mobile">☰</button>
+      <div class="brand">Mini Flowy</div>
+      <span class="muted">Markdown + Mermaid (pan/zoom)</span>
+    </div>
+    <div class="topbar">
+      <label style="display:flex;align-items:center;gap:6px" class="muted">
+        <input type="checkbox" id="pz" checked/> Pan&Zoom
+      </label>
+      <button id="theme" class="btn">🌓</button>
+      <a id="rawLink" class="btn" href="#" target="_blank" rel="noopener">RAW</a>
+      <button id="shareBtn" class="btn">📋 Поделиться</button>
+    </div>
+  </header>
+
+  <aside id="nav">
+    <div class="pane">
+      <div class="search">
+        <input id="q" placeholder="Поиск… (заголовки/теги)"/>
+      </div>
+      <div id="tags" class="pane"></div>
+      <div id="list"></div>
+    </div>
+  </aside>
+
+  <main>
+    <article id="content"><p class="muted">Загрузка…</p></article>
+  </main>
+
+  <!-- External Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+
+  <!-- Application Scripts -->
+  <script src="assets/data.js"></script>
+  <script src="assets/mermaidRenderer.js"></script>
+  <script src="assets/panzoomManager.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

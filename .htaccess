@@ -1,0 +1,7 @@
+RewriteEngine On
+
+# Перенаправляем SEO-страницы на основное приложение
+RewriteRule ^seo-pages/([^/]+)\.html$ /#/p/$1 [R=301,L]
+
+# Делаем index.html по умолчанию
+DirectoryIndex index.html
