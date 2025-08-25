@@ -171,8 +171,10 @@ class AdaptiveHeaderManager {
       // Закрытие sidebar при клике на элементы меню (но не на заголовки категорий)
       nav.addEventListener('click', (e) => {
         if (window.innerWidth <= 900) {
-          // Закрываем меню только при клике на статьи (.item), но не на категории
-          if (e.target.classList.contains('item') && !e.target.closest('.category-header')) {
+          // Закрываем меню только при клике на статьи (.item), но не на категории или их элементы
+          if (e.target.classList.contains('item') && 
+              !e.target.closest('.category-header') && 
+              !e.target.closest('.category-toggle')) {
             nav.style.display = 'none';
           }
         }
@@ -543,7 +545,9 @@ function renderCategoryHeader(categoryName, pages, container, activeSlug, level,
   const categoryPath = fullPath || categoryName;
   const categoryId = categoryPath.replace(/\s+/g, '-').toLowerCase();
   const isCollapsed = state.collapsedCategories.has(categoryId);
-  const icon = pages[0]?.icon || '📁';
+  
+  // Используем иконки папок для всех категорий
+  const icon = '📁';
   const hasChildren = level !== undefined; // если level передан, значит это иерархическая структура
   
   // Заголовок категории
@@ -640,7 +644,9 @@ function openCategory(categorySlug) {
 // Показ страницы категории
 function showCategoryPage(categoryName, pages) {
   const content = document.querySelector('#content');
-  const icon = pages[0]?.icon || '📁';
+  
+  // Используем иконки папок для всех категорий
+  const icon = '📁';
   
   content.innerHTML = `
     <div class="category-page">
@@ -1128,7 +1134,12 @@ async function openPage(slug) {
     applyIsolatedMode();
   }
 
-  document.getElementById('rawLink').href = p.path;
+  // Устанавливаем правильный путь для RAW ссылки
+  if (state.isFileProtocol) {
+    document.getElementById('rawLink').href = p.path;
+  } else {
+    document.getElementById('rawLink').href = 'content/' + p.path;
+  }
 
   let md;
   if (state.isFileProtocol) {
@@ -1136,11 +1147,14 @@ async function openPage(slug) {
     md = window.embeddedData.content[p.path] || `# Ошибка\n\nКонтент не найден для ${p.path}`;
   } else {
     // Загружаем из внешних файлов для HTTP протокола
-    const res = await fetch(p.path, { cache: 'no-store' });
+    const res = await fetch('content/' + p.path, { cache: 'no-store' });
     md = await res.text();
   }
 
-  const html = marked.parse(md, { mangle: false, headerIds: true });
+  // Удаляем YAML front matter если есть
+  const cleanMd = md.replace(/^---\n[\s\S]*?\n---\n/, '');
+  
+  const html = marked.parse(cleanMd, { mangle: false, headerIds: true });
   const root = document.getElementById('content');
   root.innerHTML = html;
   
