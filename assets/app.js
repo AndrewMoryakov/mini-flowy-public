@@ -186,7 +186,8 @@ class AdaptiveHeaderManager {
       
       // Закрытие sidebar по клику вне его (устойчиво к перерендеру)
       document.addEventListener('click', (e) => {
-        if (!(isMobileDevice() && nav.style.display === 'block')) return;
+        // Закрываем только когда мобильное меню реально открыто (overlay режим)
+        if (nav.style.display !== 'block') return;
 
         // Если клик пришёл изнутри навигации — игнорируем
         const path = typeof e.composedPath === 'function' ? e.composedPath() : [];
@@ -201,7 +202,8 @@ class AdaptiveHeaderManager {
       
       // Закрытие sidebar только при клике на статьи, НЕ на элементы категорий
       nav.addEventListener('click', (e) => {
-        if (isMobileDevice()) {
+        // Применяем правила закрытия только когда меню открыто оверлеем
+        if (nav.style.display === 'block') {
           // Определяем что именно кликнули:
           const isCategoryClick = e.target.closest('.category-header') || 
                                   e.target.closest('.category-toggle') ||
