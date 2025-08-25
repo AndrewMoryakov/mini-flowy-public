@@ -5,7 +5,7 @@
     <link>https://andrewmoryakov.github.io/mini-flowy-public/</link>
     <description>Легкий и быстрый Markdown + Mermaid просмотрщик с панорамированием и зумом диаграмм</description>
     <language>ru</language>
-    <lastBuildDate>Mon, 25 Aug 2025 14:40:41 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 25 Aug 2025 15:52:48 GMT</lastBuildDate>
     <generator>Mini Flowy v2.1.1</generator>
     <atom:link href="https://andrewmoryakov.github.io/mini-flowy-public/rss.xml" rel="self" type="application/rss+xml" />
     
@@ -15,7 +15,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/custom-themes</guid>
       <description>Статья из категории "Advanced" в Mini Flowy</description>
       <category>Advanced</category>
-      <pubDate>Mon, 25 Aug 2025 14:40:41 GMT</pubDate>
+      <pubDate>Mon, 25 Aug 2025 15:52:48 GMT</pubDate>
     </item>
     <item>
       <title>Пример: Mermaid</title>
@@ -23,7 +23,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/diagrams</guid>
       <description>Статья из категории "Examples" в Mini Flowy</description>
       <category>Examples</category>
-      <pubDate>Mon, 25 Aug 2025 14:40:41 GMT</pubDate>
+      <pubDate>Mon, 25 Aug 2025 15:52:48 GMT</pubDate>
     </item>
     <item>
       <title>Примеры диаграмм</title>
@@ -31,7 +31,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/flowcharts</guid>
       <description>Статья из категории "Examples" в Mini Flowy</description>
       <category>Examples</category>
-      <pubDate>Mon, 25 Aug 2025 14:40:41 GMT</pubDate>
+      <pubDate>Mon, 25 Aug 2025 15:52:48 GMT</pubDate>
     </item>
     <item>
       <title>UI компоненты</title>
@@ -39,7 +39,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/ui-components</guid>
       <description>Статья из категории "Examples" в Mini Flowy</description>
       <category>Examples</category>
-      <pubDate>Mon, 25 Aug 2025 14:40:41 GMT</pubDate>
+      <pubDate>Mon, 25 Aug 2025 15:52:48 GMT</pubDate>
     </item>
     <item>
       <title>Вступление</title>
@@ -47,7 +47,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/intro</guid>
       <description>Статья из категории "Getting Started" в Mini Flowy</description>
       <category>Getting Started</category>
-      <pubDate>Mon, 25 Aug 2025 14:40:41 GMT</pubDate>
+      <pubDate>Mon, 25 Aug 2025 15:52:48 GMT</pubDate>
     </item>
     <item>
       <title>Установка</title>
@@ -55,7 +55,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/installation</guid>
       <description>Статья из категории "Getting Started" в Mini Flowy</description>
       <category>Getting Started</category>
-      <pubDate>Mon, 25 Aug 2025 14:40:41 GMT</pubDate>
+      <pubDate>Mon, 25 Aug 2025 15:52:48 GMT</pubDate>
     </item>
     <item>
       <title>Первые шаги</title>
@@ -63,7 +63,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/first-steps</guid>
       <description>Статья из категории "Getting Started/Основы работы" в Mini Flowy</description>
       <category>Getting Started/Основы работы</category>
-      <pubDate>Mon, 25 Aug 2025 14:40:41 GMT</pubDate>
+      <pubDate>Mon, 25 Aug 2025 15:52:48 GMT</pubDate>
     </item>
     <item>
       <title>Основы Markdown</title>
@@ -71,7 +71,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/basic-markdown</guid>
       <description>Статья из категории "Tutorials" в Mini Flowy</description>
       <category>Tutorials</category>
-      <pubDate>Mon, 25 Aug 2025 14:40:41 GMT</pubDate>
+      <pubDate>Mon, 25 Aug 2025 15:52:48 GMT</pubDate>
     </item>
     <item>
       <title>Работа с Mermaid диаграммами</title>
@@ -79,7 +79,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/mermaid-diagrams</guid>
       <description>Статья из категории "Tutorials" в Mini Flowy</description>
       <category>Tutorials</category>
-      <pubDate>Mon, 25 Aug 2025 14:40:41 GMT</pubDate>
+      <pubDate>Mon, 25 Aug 2025 15:52:48 GMT</pubDate>
     </item>
   </channel>
 </rss>

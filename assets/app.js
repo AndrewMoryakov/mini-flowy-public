@@ -3,13 +3,38 @@
  * Основная логика приложения
  */
 
+// Константы приложения
+const CONSTANTS = {
+  // Используем matchMedia для более точного определения мобильных устройств
+  MOBILE_BREAKPOINT: 900, // Ширина экрана для мобильной версии (px) - можно заменить на matchMedia
+  TABLET_BREAKPOINT: 768, // Стандартный брейкпоинт для планшетов (px)
+  HEADER_HEIGHT: 60, // Примерная высота header (px)
+  INIT_DELAY: 100, // Задержка инициализации (ms)
+  THEME_CHECK_DELAY: 200, // Задержка проверки темы (ms)
+  DEFAULT_THEME: 'light',
+  DEFAULT_COLOR_SCHEME: 'blue'
+};
+
+// Функция для более точного определения типа устройства
+function isMobileDevice() {
+  // Проверяем и размер экрана, и тип устройства
+  const isMobileSize = window.innerWidth <= CONSTANTS.MOBILE_BREAKPOINT;
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  const isPortrait = window.innerHeight > window.innerWidth;
+  
+  // Мобильное устройство если:
+  // 1. Экран узкий И есть тач-поддержка
+  // 2. ИЛИ очень узкий экран (меньше планшета)
+  return (isMobileSize && isTouchDevice) || window.innerWidth <= CONSTANTS.TABLET_BREAKPOINT;
+}
+
 // Состояние приложения
 const state = {
   pages: [],
   fuse: null,
   pzOn: true,
-  theme: localStorage.getItem('theme') || 'light',
-  colorScheme: localStorage.getItem('colorScheme') || 'blue',
+  theme: localStorage.getItem('theme') || CONSTANTS.DEFAULT_THEME,
+  colorScheme: localStorage.getItem('colorScheme') || CONSTANTS.DEFAULT_COLOR_SCHEME,
   pzInstances: [],
   isFileProtocol: location.protocol === 'file:',
   activeTags: new Set(), // Активные фильтры по тегам
@@ -105,11 +130,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (colorBtn && colorBtn.style.display === 'none') {
       colorBtn.style.display = '';
     }
-  }, 200);
+  }, CONSTANTS.THEME_CHECK_DELAY);
 });
 
 // Fallback для случаев когда DOMContentLoaded уже прошел
-setTimeout(createColorSchemeSelector, 100);
+setTimeout(createColorSchemeSelector, CONSTANTS.INIT_DELAY);
 
 // Управление адаптивным header меню
 class AdaptiveHeaderManager {
@@ -146,7 +171,7 @@ class AdaptiveHeaderManager {
     
     // Проверяем размер при загрузке и изменении размера
     window.addEventListener('resize', () => this.checkHeaderOverflow());
-    setTimeout(() => this.checkHeaderOverflow(), 100);
+    setTimeout(() => this.checkHeaderOverflow(), CONSTANTS.INIT_DELAY);
   }
   
   setupSidebarHandlers() {
@@ -161,20 +186,29 @@ class AdaptiveHeaderManager {
       
       // Закрытие sidebar по клику вне его
       document.addEventListener('click', (e) => {
-        if (window.innerWidth <= 900 && nav.style.display === 'block') {
+        if (isMobileDevice() && nav.style.display === 'block') {
           if (!nav.contains(e.target) && e.target !== toggleNav) {
             nav.style.display = 'none';
           }
         }
       });
       
-      // Закрытие sidebar при клике на элементы меню (но не на заголовки категорий)
+      // Закрытие sidebar только при клике на статьи, НЕ на элементы категорий
       nav.addEventListener('click', (e) => {
-        if (window.innerWidth <= 900) {
-          // Закрываем меню только при клике на статьи (.item), но не на категории или их элементы
-          if (e.target.classList.contains('item') && 
-              !e.target.closest('.category-header') && 
-              !e.target.closest('.category-toggle')) {
+        if (isMobileDevice()) {
+          // Определяем что именно кликнули:
+          // 1. Если клик по статье (.item) И НЕ внутри заголовка категории - закрываем
+          // 2. Если клик по любому элементу категории - НЕ закрываем
+          const isItemClick = e.target.classList.contains('item') || e.target.closest('.item');
+          const isCategoryClick = e.target.closest('.category-header') || 
+                                  e.target.closest('.category-toggle') ||
+                                  e.target.classList.contains('category-icon') ||
+                                  e.target.classList.contains('category-name') ||
+                                  e.target.classList.contains('category-count') ||
+                                  e.target.classList.contains('category-share-btn');
+          
+          // Закрываем только если это клик по статье И НЕ по элементу категории
+          if (isItemClick && !isCategoryClick) {
             nav.style.display = 'none';
           }
         }
@@ -183,7 +217,11 @@ class AdaptiveHeaderManager {
   }
   
   checkHeaderOverflow() {
-    if (window.innerWidth <= 900) return; // На мобильных не используем это меню
+    if (isMobileDevice()) {
+      // На мобильных всегда показываем все кнопки
+      this.restoreItemsFromMenu();
+      return;
+    }
     
     const header = document.querySelector('header');
     const availableWidth = header.offsetWidth - 40; // Отступы
@@ -201,8 +239,8 @@ class AdaptiveHeaderManager {
     const items = this.headerActions.children;
     const itemsToHide = [];
     
-    // Начинаем с менее важных элементов
-    const priority = ['shareBtn', 'rawLink', 'colorScheme'];
+    // Начинаем с менее важных элементов (colorScheme важнее RAW)
+    const priority = ['shareBtn', 'rawLink'];
     
     for (const id of priority) {
       const element = document.getElementById(id);
@@ -285,7 +323,7 @@ class AdaptiveHeaderManager {
 // Инициализируем адаптивный header
 setTimeout(() => {
   new AdaptiveHeaderManager();
-}, 100);
+}, CONSTANTS.INIT_DELAY);
 
 // Исправляем проблему с 100vh на мобильных устройствах
 function fixViewportHeight() {
@@ -298,7 +336,7 @@ function fixViewportHeight() {
 window.addEventListener('load', fixViewportHeight);
 window.addEventListener('resize', fixViewportHeight);
 window.addEventListener('orientationchange', () => {
-  setTimeout(fixViewportHeight, 100); // Задержка для корректного определения размера
+  setTimeout(fixViewportHeight, CONSTANTS.INIT_DELAY); // Задержка для корректного определения размера
 });
 
 // Функции для шаринга и SEO
@@ -400,11 +438,12 @@ document.getElementById('shareBtn').onclick = async () => {
 
 // Загрузка манифеста
 async function loadManifest() {
-  if (state.isFileProtocol) {
-    // Используем встроенные данные для file:// протокола
+  // Проверяем есть ли встроенные данные (для публичной версии)
+  if (window.embeddedData && window.embeddedData.pages) {
+    // Используем встроенные данные
     state.pages = window.embeddedData.pages;
   } else {
-    // Загружаем из внешних файлов для HTTP протокола
+    // Загружаем из внешних файлов
     const res = await fetch('pages.json', { cache: 'no-store' });
     state.pages = await res.json();
   }
@@ -1142,13 +1181,22 @@ async function openPage(slug) {
   }
 
   let md;
-  if (state.isFileProtocol) {
-    // Используем встроенный контент для file:// протокола
-    md = window.embeddedData.content[p.path] || `# Ошибка\n\nКонтент не найден для ${p.path}`;
+  // Сначала проверяем встроенные данные (для публичной версии)
+  if (window.embeddedData && window.embeddedData.content && window.embeddedData.content[p.path]) {
+    // Используем встроенный контент
+    md = window.embeddedData.content[p.path];
   } else {
-    // Загружаем из внешних файлов для HTTP протокола
-    const res = await fetch('content/' + p.path, { cache: 'no-store' });
-    md = await res.text();
+    // Загружаем из внешних файлов
+    try {
+      const res = await fetch('content/' + p.path, { cache: 'no-store' });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+      md = await res.text();
+    } catch (error) {
+      console.error('Ошибка загрузки контента:', error);
+      md = `# Ошибка загрузки\n\nНе удалось загрузить контент для ${p.path}\n\nОшибка: ${error.message}`;
+    }
   }
 
   // Удаляем YAML front matter если есть
@@ -1197,7 +1245,7 @@ async function openPage(slug) {
   }
   
   renderList(state.pages, slug);
-  if (window.innerWidth < 900) {
+  if (isMobileDevice()) {
     const nav = document.getElementById('nav');
     if (nav) nav.style.display = 'none';
   }
