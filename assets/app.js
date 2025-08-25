@@ -67,6 +67,12 @@ document.getElementById('theme').onclick = () => setTheme(state.theme === 'dark'
 // Создаем кнопку переключения цветовых схем
 function createColorSchemeSelector() {
   const themeBtn = document.getElementById('theme');
+  
+  // Проверяем, не создана ли уже кнопка
+  if (document.getElementById('colorScheme')) {
+    return;
+  }
+  
   const colorBtn = document.createElement('button');
   colorBtn.className = 'btn';
   colorBtn.id = 'colorScheme';
@@ -89,7 +95,20 @@ function createColorSchemeSelector() {
   };
 }
 
-// Инициализируем кнопку после загрузки DOM
+// Инициализируем кнопку после загрузки DOM и убеждаемся что она видима
+document.addEventListener('DOMContentLoaded', () => {
+  createColorSchemeSelector();
+  
+  // Убеждаемся что кнопка не скрыта адаптивным менеджером
+  setTimeout(() => {
+    const colorBtn = document.getElementById('colorScheme');
+    if (colorBtn && colorBtn.style.display === 'none') {
+      colorBtn.style.display = '';
+    }
+  }, 200);
+});
+
+// Fallback для случаев когда DOMContentLoaded уже прошел
 setTimeout(createColorSchemeSelector, 100);
 
 // Управление адаптивным header меню
@@ -149,10 +168,13 @@ class AdaptiveHeaderManager {
         }
       });
       
-      // Закрытие sidebar при клике на элементы меню
+      // Закрытие sidebar при клике на элементы меню (но не на заголовки категорий)
       nav.addEventListener('click', (e) => {
-        if (window.innerWidth <= 900 && e.target.classList.contains('item')) {
-          nav.style.display = 'none';
+        if (window.innerWidth <= 900) {
+          // Закрываем меню только при клике на статьи (.item), но не на категории
+          if (e.target.classList.contains('item') && !e.target.closest('.category-header')) {
+            nav.style.display = 'none';
+          }
         }
       });
     }
@@ -402,97 +424,174 @@ function renderList(items, activeSlug) {
   const categorized = groupByCategory(items);
   
   // Если нет категорий, показываем обычный список
-  if (categorized.uncategorized && categorized.uncategorized.length === items.length) {
+  if (categorized.flat.uncategorized && categorized.flat.uncategorized.length === items.length) {
     renderSimpleList(items, activeSlug, el);
     return;
   }
   
-  // Рендерим категоризованный список
-  Object.keys(categorized).forEach(categoryName => {
-    if (categoryName === 'uncategorized' && categorized[categoryName].length === 0) return;
-    
-    const pages = categorized[categoryName];
-    const categoryId = categoryName.replace(/\s+/g, '-').toLowerCase();
-    const isCollapsed = state.collapsedCategories.has(categoryId);
-    const icon = pages[0]?.icon || '📁';
-    
-    // Заголовок категории
-    const categoryHeader = document.createElement('div');
-    categoryHeader.className = 'category-header';
-    categoryHeader.innerHTML = `
-      <div class="category-toggle" data-category="${categoryId}">
-        <span class="category-icon">${isCollapsed ? '▶' : '▼'}</span>
-        <span class="category-name">${icon} ${categoryName === 'uncategorized' ? 'Без категории' : categoryName}</span>
-        <span class="category-count">${pages.length}</span>
-        <button class="category-share-btn" onclick="event.stopPropagation(); shareCategory('${categoryName}', event)" title="Поделиться категорией">🔗</button>
-      </div>
-    `;
-    
-    // Обработчик сворачивания/разворачивания только для основной области
-    categoryHeader.onclick = (event) => {
-      // Проверяем, что клик НЕ по кнопке шаринга
-      if (!event.target.classList.contains('category-share-btn')) {
-        toggleCategory(categoryId);
-      }
-    };
-    
-    el.appendChild(categoryHeader);
-    
-    // Контейнер для страниц категории
-    if (!isCollapsed) {
-      const categoryContent = document.createElement('div');
-      categoryContent.className = 'category-content';
+  // Проверяем, есть ли вложенные категории
+  const hasNestedCategories = Object.values(categorized.hierarchical).some(category => 
+    Object.keys(category.children).length > 0
+  );
+  
+  if (hasNestedCategories) {
+    // Рендерим иерархическую структуру
+    renderHierarchicalCategories(categorized.hierarchical, el, activeSlug, 0);
+  } else {
+    // Используем старый плоский рендеринг для обратной совместимости
+    Object.keys(categorized.flat).forEach(categoryName => {
+      if (categoryName === 'uncategorized' && categorized.flat[categoryName].length === 0) return;
       
-      pages.forEach(page => {
-        const isPrivate = page.public === false;
-        const div = document.createElement('div');
-        div.className = 'item' + (page.slug === activeSlug ? ' active' : '') + (isPrivate ? ' private' : '');
-        div.innerHTML = `
-          <div class="item-title">
-            ${page.title}
-            ${isPrivate ? '<span class="lock-icon">🔒</span>' : ''}
-          </div>
-          <div class="item-tags">${(page.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
-        `;
-        div.onclick = () => { location.hash = '#/p/' + page.slug; };
-        categoryContent.appendChild(div);
-      });
-      
-      el.appendChild(categoryContent);
-    }
-  });
+      const pages = categorized.flat[categoryName];
+      renderCategoryHeader(categoryName, pages, el, activeSlug, 0);
+    });
+  }
 }
 
-// Группировка страниц по категориям
+// Группировка страниц по категориям с поддержкой вложенности
 function groupByCategory(pages) {
-  const groups = {};
+  const hierarchicalGroups = {};
   
   pages.forEach(page => {
-    const category = page.category || 'uncategorized';
-    if (!groups[category]) {
-      groups[category] = [];
-    }
-    groups[category].push(page);
+    const categoryPath = page.category || 'uncategorized';
+    const categoryParts = categoryPath.split('/').map(part => part.trim());
+    
+    // Создаем вложенную структуру
+    let currentLevel = hierarchicalGroups;
+    let fullPath = '';
+    
+    categoryParts.forEach((part, index) => {
+      fullPath = fullPath ? `${fullPath}/${part}` : part;
+      
+      if (!currentLevel[part]) {
+        currentLevel[part] = {
+          name: part,
+          fullPath: fullPath,
+          pages: [],
+          children: {},
+          level: index
+        };
+      }
+      
+      // Если это последняя часть пути, добавляем страницу
+      if (index === categoryParts.length - 1) {
+        currentLevel[part].pages.push(page);
+      }
+      
+      currentLevel = currentLevel[part].children;
+    });
   });
   
-  // Сортируем категории в определенном порядке
-  const sortedGroups = {};
+  // Для обратной совместимости также создаем плоскую структуру
+  const flatGroups = {};
+  pages.forEach(page => {
+    const category = page.category || 'uncategorized';
+    if (!flatGroups[category]) {
+      flatGroups[category] = [];
+    }
+    flatGroups[category].push(page);
+  });
+  
+  // Сортируем плоские категории в определенном порядке (для обратной совместимости)
+  const sortedFlatGroups = {};
   const categoryOrder = ['Начало работы', 'Туториалы', 'Примеры', 'Продвинутое'];
   
   categoryOrder.forEach(cat => {
-    if (groups[cat]) {
-      sortedGroups[cat] = groups[cat];
+    if (flatGroups[cat]) {
+      sortedFlatGroups[cat] = flatGroups[cat];
     }
   });
   
   // Добавляем остальные категории
-  Object.keys(groups).forEach(cat => {
+  Object.keys(flatGroups).forEach(cat => {
     if (!categoryOrder.includes(cat)) {
-      sortedGroups[cat] = groups[cat];
+      sortedFlatGroups[cat] = flatGroups[cat];
     }
   });
   
-  return sortedGroups;
+  // Возвращаем объект с двумя структурами
+  return {
+    flat: sortedFlatGroups, // для обратной совместимости
+    hierarchical: hierarchicalGroups // новая иерархическая структура
+  };
+}
+
+// Рекурсивный рендеринг иерархических категорий
+function renderHierarchicalCategories(categories, container, activeSlug, level) {
+  Object.keys(categories).forEach(categoryName => {
+    const category = categories[categoryName];
+    
+    // Рендерим заголовок категории
+    if (category.pages.length > 0 || Object.keys(category.children).length > 0) {
+      renderCategoryHeader(category.name, category.pages, container, activeSlug, level, category.fullPath);
+      
+      // Рекурсивно рендерим дочерние категории
+      if (Object.keys(category.children).length > 0) {
+        const categoryId = category.fullPath.replace(/\s+/g, '-').toLowerCase();
+        const isCollapsed = state.collapsedCategories.has(categoryId);
+        
+        if (!isCollapsed) {
+          renderHierarchicalCategories(category.children, container, activeSlug, level + 1);
+        }
+      }
+    }
+  });
+}
+
+// Рендеринг заголовка категории (переиспользуемый компонент)
+function renderCategoryHeader(categoryName, pages, container, activeSlug, level, fullPath = null) {
+  const categoryPath = fullPath || categoryName;
+  const categoryId = categoryPath.replace(/\s+/g, '-').toLowerCase();
+  const isCollapsed = state.collapsedCategories.has(categoryId);
+  const icon = pages[0]?.icon || '📁';
+  const hasChildren = level !== undefined; // если level передан, значит это иерархическая структура
+  
+  // Заголовок категории
+  const categoryHeader = document.createElement('div');
+  categoryHeader.className = `category-header${level ? ` category-level-${level}` : ''}`;
+  categoryHeader.style.paddingLeft = `${level * 20}px`; // отступ для уровня вложенности
+  
+  categoryHeader.innerHTML = `
+    <div class="category-toggle" data-category="${categoryId}">
+      <span class="category-icon">${isCollapsed ? '▶' : '▼'}</span>
+      <span class="category-name">${icon} ${categoryName === 'uncategorized' ? 'Без категории' : categoryName}</span>
+      <span class="category-count">${pages.length}</span>
+      <button class="category-share-btn" onclick="event.stopPropagation(); shareCategory('${categoryPath}', event)" title="Поделиться категорией">🔗</button>
+    </div>
+  `;
+  
+  // Обработчик сворачивания/разворачивания
+  categoryHeader.onclick = (event) => {
+    if (!event.target.classList.contains('category-share-btn')) {
+      toggleCategory(categoryId);
+    }
+  };
+  
+  container.appendChild(categoryHeader);
+  
+  // Контейнер для страниц категории
+  if (!isCollapsed && pages.length > 0) {
+    const categoryContent = document.createElement('div');
+    categoryContent.className = `category-content${level ? ` category-content-level-${level}` : ''}`;
+    categoryContent.style.marginLeft = `${(level + 1) * 20}px`; // дополнительный отступ для содержимого
+    
+    pages.forEach(page => {
+      const isPrivate = page.public === false;
+      const div = document.createElement('div');
+      div.className = 'item' + (page.slug === activeSlug ? ' active' : '') + (isPrivate ? ' private' : '');
+      div.innerHTML = `
+        <div class="item-title">
+          ${page.title}
+          ${isPrivate ? '<span class="lock-icon">🔒</span>' : ''}
+        </div>
+        <div class="item-tags">${(page.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
+      `;
+      div.onclick = () => { location.hash = '#/p/' + page.slug; };
+      categoryContent.appendChild(div);
+    });
+    
+    container.appendChild(categoryContent);
+  }
 }
 
 // Открытие категории
