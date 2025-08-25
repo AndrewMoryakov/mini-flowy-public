@@ -184,13 +184,19 @@ class AdaptiveHeaderManager {
         nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
       });
       
-      // Закрытие sidebar по клику вне его
+      // Закрытие sidebar по клику вне его (устойчиво к перерендеру)
       document.addEventListener('click', (e) => {
-        if (isMobileDevice() && nav.style.display === 'block') {
-          if (!nav.contains(e.target) && e.target !== toggleNav) {
-            nav.style.display = 'none';
-          }
-        }
+        if (!(isMobileDevice() && nav.style.display === 'block')) return;
+
+        // Если клик пришёл изнутри навигации — игнорируем
+        const path = typeof e.composedPath === 'function' ? e.composedPath() : [];
+        const cameFromNav = (path && path.includes(nav)) || nav.contains(e.target);
+        if (cameFromNav) return;
+
+        // Игнорируем повторный клик по кнопке открытия
+        if (e.target === toggleNav || (e.target && e.target.closest && e.target.closest('#toggleNav'))) return;
+
+        nav.style.display = 'none';
       });
       
       // Закрытие sidebar только при клике на статьи, НЕ на элементы категорий
@@ -205,20 +211,21 @@ class AdaptiveHeaderManager {
                                   e.target.classList.contains('category-name') ||
                                   e.target.classList.contains('category-count') ||
                                   e.target.classList.contains('category-share-btn');
-          
+
           const isItemClick = e.target.classList.contains('item') || e.target.closest('.item');
-          
-          // НЕ закрываем меню если:
-          // 1. Клик по любому элементу категории
-          // 2. Клик внутри самого меню навигации
-          if (isCategoryClick) {
-            return; // Не закрываем меню при клике по категории
-          }
-          
-          // Закрываем только при клике по статье
-          if (isItemClick) {
+
+          // Закрываем меню ТОЛЬКО при клике по статье
+          if (isItemClick && !isCategoryClick) {
             nav.style.display = 'none';
           }
+
+          // На всякий случай: если это клик по заголовку категории — прерываем всплытие,
+          // чтобы глобальные обработчики (вне навигации) не сработали при перерендере
+          if (isCategoryClick && typeof e.stopPropagation === 'function') {
+            e.stopPropagation();
+          }
+
+          // НЕ закрываем меню при клике по категории или любых других элементах навигации
         }
       });
     }
@@ -619,6 +626,7 @@ function renderCategoryHeader(categoryName, pages, container, activeSlug, level,
   // Обработчик сворачивания/разворачивания
   categoryHeader.onclick = (event) => {
     if (!event.target.classList.contains('category-share-btn')) {
+      event.stopPropagation(); // Предотвращаем всплытие события после перерендеринга DOM
       toggleCategory(categoryId);
     }
   };
@@ -1194,11 +1202,22 @@ async function openPage(slug) {
     if (window.embeddedData && window.embeddedData.content && window.embeddedData.content[p.path]) {
       const rawContent = window.embeddedData.content[p.path];
       const blob = new Blob([rawContent], { type: 'text/plain' });
-      document.getElementById('rawLink').href = URL.createObjectURL(blob);
-      document.getElementById('rawLink').target = '_blank';
-      document.getElementById('rawLink').removeAttribute('download');
+      const rawLink = document.getElementById('rawLink');
+      rawLink.href = URL.createObjectURL(blob);
+      rawLink.target = '_blank';
+      rawLink.removeAttribute('download');
+      // Принудительно открываем в новой вкладке, а не скачиваем
+      rawLink.onclick = function(e) {
+        e.preventDefault();
+        window.open(this.href, '_blank');
+        return false;
+      };
     } else {
-      document.getElementById('rawLink').href = 'content/' + p.path;
+      const rawLink = document.getElementById('rawLink');
+      rawLink.href = 'content/' + p.path;
+      rawLink.target = '_blank';
+      rawLink.removeAttribute('download');
+      rawLink.onclick = null; // убираем кастомный обработчик для файловой системы
     }
   }
 
@@ -1267,10 +1286,7 @@ async function openPage(slug) {
   }
   
   renderList(state.pages, slug);
-  if (isMobileDevice()) {
-    const nav = document.getElementById('nav');
-    if (nav) nav.style.display = 'none';
-  }
+  // НЕ закрываем меню автоматически - пользователь сам решает когда его закрыть
   root.scrollTop = 0;
 }
 
