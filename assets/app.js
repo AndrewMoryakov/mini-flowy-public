@@ -1193,9 +1193,10 @@ async function openPage(slug) {
     // В публичной версии показываем встроенный контент в новой вкладке
     if (window.embeddedData && window.embeddedData.content && window.embeddedData.content[p.path]) {
       const rawContent = window.embeddedData.content[p.path];
-      const blob = new Blob([rawContent], { type: 'text/markdown' });
+      const blob = new Blob([rawContent], { type: 'text/plain' });
       document.getElementById('rawLink').href = URL.createObjectURL(blob);
-      document.getElementById('rawLink').download = p.path.split('/').pop();
+      document.getElementById('rawLink').target = '_blank';
+      document.getElementById('rawLink').removeAttribute('download');
     } else {
       document.getElementById('rawLink').href = 'content/' + p.path;
     }

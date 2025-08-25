@@ -383,18 +383,18 @@ main {
 
 /* Стили для вложенных категорий */
 .category-level-1 {
-  background: var(--accent-50);
-  border-left: 2px solid var(--accent-200);
+  background: var(--primary-50);
+  border-left: 2px solid var(--accent);
 }
 
 .category-level-2 {
-  background: var(--accent-100);
-  border-left: 2px solid var(--accent-300);
+  background: var(--primary-100);
+  border-left: 2px solid var(--accent);
 }
 
 .category-level-3 {
-  background: var(--accent-200);
-  border-left: 2px solid var(--accent-400);
+  background: var(--primary-200);
+  border-left: 2px solid var(--accent);
 }
 
 /* Контент для разных уровней */
@@ -403,17 +403,17 @@ main {
 }
 
 .category-content-level-1 {
-  border-left-color: var(--accent-300);
+  border-left-color: var(--accent);
   margin-left: 12px;
 }
 
 .category-content-level-2 {
-  border-left-color: var(--accent-400);
+  border-left-color: var(--accent);
   margin-left: 18px;
 }
 
 .category-content-level-3 {
-  border-left-color: var(--accent-500);
+  border-left-color: var(--accent);
   margin-left: 24px;
 }
 
