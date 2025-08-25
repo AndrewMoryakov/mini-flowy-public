@@ -94,7 +94,12 @@ setTimeout(createColorSchemeSelector, 100);
 
 // Функции для шаринга и SEO
 function updateMetaTags(page) {
-  const baseUrl = location.origin + location.pathname;
+  // Используем правильный baseUrl для публичной версии
+  const isGitHubPages = location.hostname.includes('github.io');
+  const baseUrl = isGitHubPages ? 
+    'https://andrewmoryakov.github.io/mini-flowy-public/' : 
+    location.origin + location.pathname;
+    
   const pageUrl = baseUrl + '#/p/' + page.slug;
   const pageTitle = page.title + ' - Mini Flowy';
   const pageDescription = `${page.title} | Markdown + Mermaid диаграммы с панорамированием и зумом`;
@@ -149,7 +154,6 @@ async function shareContent(title, url, buttonElement = null) {
     try {
       await navigator.share({
         title: title,
-        text: `Посмотрите: ${title}`,
         url: url
       });
     } catch (err) {
@@ -437,8 +441,12 @@ function updateMetaTagsForCategory(categoryName, pages) {
     // Для локальной работы используем полный путь к файлу
     url = `${window.location.href.split('#')[0]}#/category/${categorySlug}`;
   } else {
-    // Для веб-серверов используем стандартный подход
-    url = `${window.location.origin}${window.location.pathname}#/category/${categorySlug}`;
+    // Используем правильный baseUrl для публичной версии
+    const isGitHubPages = location.hostname.includes('github.io');
+    const baseUrl = isGitHubPages ? 
+      'https://andrewmoryakov.github.io/mini-flowy-public/' : 
+      location.origin + location.pathname;
+    url = `${baseUrl}#/category/${categorySlug}`;
   }
   
   document.title = title;

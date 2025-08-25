@@ -126,6 +126,35 @@ header {
 
 .brand {
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand svg {
+  flex-shrink: 0;
+  border-radius: 6px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.brand svg:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.brand svg:active {
+  transform: translateY(0) scale(0.98);
+  transition: all 0.1s ease;
+}
+
+/* Поддержка темной темы для логотипа */
+[data-theme="dark"] .brand svg {
+  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+}
+
+[data-theme="dark"] .brand svg:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
 }
 
 .btn {
@@ -626,6 +655,12 @@ article h3 {
 
   .pane {
     padding: 10px;
+  }
+
+  /* Фиксируем размер названий категорий на мобильных */
+  .category-name {
+    font-size: 13px !important;
+    font-weight: 600 !important;
   }
 
   article {

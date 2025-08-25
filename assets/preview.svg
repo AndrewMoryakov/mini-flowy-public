@@ -1,0 +1,29 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- Main Title -->
+  <text x="600" y="250" font-family="system-ui, Arial, sans-serif" font-size="72" font-weight="bold" 
+        text-anchor="middle" fill="white">Mini Flowy</text>
+  
+  <!-- Subtitle -->
+  <text x="600" y="320" font-family="system-ui, Arial, sans-serif" font-size="36" 
+        text-anchor="middle" fill="white" opacity="0.9">Markdown + Mermaid просмотрщик</text>
+  
+  <!-- Description -->
+  <text x="600" y="380" font-family="system-ui, Arial, sans-serif" font-size="28" 
+        text-anchor="middle" fill="white" opacity="0.8">с панорамированием и зумом диаграмм</text>
+  
+  <!-- Decorative elements -->
+  <rect x="100" y="450" width="200" height="100" fill="white" opacity="0.2" rx="8"/>
+  <rect x="400" y="480" width="150" height="80" fill="white" opacity="0.2" rx="8"/>
+  <rect x="700" y="460" width="180" height="90" fill="white" opacity="0.2" rx="8"/>
+  <rect x="950" y="470" width="120" height="100" fill="white" opacity="0.2" rx="8"/>
+</svg>
