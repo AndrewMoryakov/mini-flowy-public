@@ -1231,7 +1231,7 @@ async function openPage(slug) {
   } else {
     // Загружаем из внешних файлов
     try {
-      const res = await fetch('content/' + p.path, { cache: 'no-store' });
+      const res = await fetch(p.path, { cache: 'no-store' });
       if (!res.ok) {
         throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       }
