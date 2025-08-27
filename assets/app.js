@@ -1243,7 +1243,7 @@ async function openPage(slug) {
   }
 
   // Удаляем YAML front matter если есть
-  const cleanMd = md.replace(/^---\n[\s\S]*?\n---\n/, '');
+  const cleanMd = md.replace(/^---\n[\s\S]*?\n---\n?/, '');
   
   const html = marked.parse(cleanMd, { mangle: false, headerIds: true });
   const root = document.getElementById('content');
