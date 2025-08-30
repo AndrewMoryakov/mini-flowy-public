@@ -18,6 +18,23 @@
     "order": 1
   },
   {
+    "title": "ZeroTier vs Tailscale: Современные mesh-сети для удаленной работы",
+    "slug": "zerotier-tailscale-mesh-networks",
+    "path": "content/technologies/networking/zerotier-tailscale-mesh-networks.md",
+    "category": "Технологии/Сетевые инструменты",
+    "icon": "🌐",
+    "tags": [
+      "networking",
+      "mesh",
+      "zerotier",
+      "tailscale",
+      "безопасность",
+      "wireguard"
+    ],
+    "public": true,
+    "order": 2
+  },
+  {
     "title": "🚀 Скрипты для автоматической установки VLESS/Xray",
     "slug": "readme",
     "path": "content/technologies/networking/scripts/README.md",
