@@ -1,152 +1,0 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Примеры диаграмм - Mini Flowy</title>
-
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://your-username.github.io/mini-flowy/#/p/flowcharts">
-<meta property="og:title" content="Примеры диаграмм - Mini Flowy">
-<meta property="og:description" content="Примеры диаграмм | Markdown + Mermaid диаграммы с панорамированием и зумом">
-<meta property="og:site_name" content="Mini Flowy">
-
-<!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:url" content="https://your-username.github.io/mini-flowy/#/p/flowcharts">
-<meta property="twitter:title" content="Примеры диаграмм - Mini Flowy">
-<meta property="twitter:description" content="Примеры диаграмм | Markdown + Mermaid диаграммы с панорамированием и зумом">
-
-<!-- General -->
-<meta name="description" content="Примеры диаграмм | Markdown + Mermaid диаграммы с панорамированием и зумом">
-<meta name="author" content="Mini Flowy">
-<meta name="keywords" content="mermaid, flowchart, examples, markdown, mermaid, диаграммы">
-<link rel="canonical" href="https://your-username.github.io/mini-flowy/#/p/flowcharts">
-
-<!-- Redirect to main app -->
-<script>
-  // Перенаправляем на основное приложение с правильным хешем
-  if (window.top === window.self) {
-    window.location.href = 'https://your-username.github.io/mini-flowy/#/p/flowcharts';
-  }
-</script>
-
-<style>
-  body { 
-    font-family: system-ui, sans-serif; 
-    max-width: 800px; 
-    margin: 0 auto; 
-    padding: 20px; 
-    line-height: 1.6; 
-  }
-  .seo-notice {
-    background: #f0f9ff;
-    border: 1px solid #0ea5e9;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-  }
-  .seo-notice a {
-    color: #0ea5e9;
-    text-decoration: none;
-    font-weight: 600;
-  }
-  pre {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    overflow-x: auto;
-  }
-</style>
-</head>
-<body>
-
-<div class="seo-notice">
-  📱 <strong>Эта страница оптимизирована для поисковых систем.</strong><br>
-  Для полного интерактивного опыта с Mermaid диаграммами и панорамированием 
-  <a href="https://your-username.github.io/mini-flowy/#/p/flowcharts">перейдите в основное приложение</a>.
-</div>
-
-<article>
-<h1>Примеры диаграмм</h1></p><p></p>
-<p></p><p></p>
-<p>Коллекция красивых Mermaid диаграмм для вдохновения.</p><p></p>
-<p></p><p></p>
-<h2>Простая блок-схема</h2></p><p></p>
-<p></p><p></p>
-<p><code></code><code>mermaid</p><p></p>
-<p>flowchart TD</p><p></p>
-<p>    A[Начало] --> B{Условие}</p><p></p>
-<p>    B -->|Да| C[Действие 1]</p><p></p>
-<p>    B -->|Нет| D[Действие 2]</p><p></p>
-<p>    C --> E[Конец]</p><p></p>
-<p>    D --> E</p><p></p>
-<p></code><code></code></p><p></p>
-<p></p><p></p>
-<h2>Схема процесса авторизации</h2></p><p></p>
-<p></p><p></p>
-<p><code></code><code>mermaid</p><p></p>
-<p>flowchart TD</p><p></p>
-<p>    Start([Пользователь заходит на сайт]) --> Check{Авторизован?}</p><p></p>
-<p>    Check -->|Да| Dashboard[Дашборд]</p><p></p>
-<p>    Check -->|Нет| Login[Страница входа]</p><p></p>
-<p>    Login --> Form[Форма входа]</p><p></p>
-<p>    Form --> Validate{Проверка данных}</p><p></p>
-<p>    Validate -->|Успех| Dashboard</p><p></p>
-<p>    Validate -->|Ошибка| Error[Показать ошибку]</p><p></p>
-<p>    Error --> Form</p><p></p>
-<p>    Dashboard --> Logout[Выход]</p><p></p>
-<p>    Logout --> Start</p><p></p>
-<p>    </p><p></p>
-<p>    style Start fill:#e1f5fe</p><p></p>
-<p>    style Dashboard fill:#e8f5e8</p><p></p>
-<p>    style Error fill:#ffebee</p><p></p>
-<p></code><code></code></p><p></p>
-<p></p><p></p>
-<h2>Архитектура системы</h2></p><p></p>
-<p></p><p></p>
-<p><code></code><code>mermaid</p><p></p>
-<p>graph TB</p><p></p>
-<p>    subgraph "Frontend"</p><p></p>
-<p>        UI[User Interface]</p><p></p>
-<p>        React[React Components]</p><p></p>
-<p>        State[State Management]</p><p></p>
-<p>    end</p><p></p>
-<p>    </p><p></p>
-<p>    subgraph "Backend"</p><p></p>
-<p>        API[REST API]</p><p></p>
-<p>        Auth[Authentication]</p><p></p>
-<p>        Logic[Business Logic]</p><p></p>
-<p>    end</p><p></p>
-<p>    </p><p></p>
-<p>    subgraph "Database"</p><p></p>
-<p>        DB[(PostgreSQL)]</p><p></p>
-<p>        Cache[(Redis)]</p><p></p>
-<p>    end</p><p></p>
-<p>    </p><p></p>
-<p>    UI --> React</p><p></p>
-<p>    React --> State</p><p></p>
-<p>    State --> API</p><p></p>
-<p>    API --> Auth</p><p></p>
-<p>    API --> Logic</p><p></p>
-<p>    Logic --> DB</p><p></p>
-<p>    Logic --> Cache</p><p></p>
-<p>    </p><p></p>
-<p>    style UI fill:#e3f2fd</p><p></p>
-<p>    style API fill:#f3e5f5</p><p></p>
-<p>    style DB fill:#e8f5e8</p><p></p>
-<p></code><code></code></p><p></p>
-<p></p>
-</article>
-
-<footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #6b7280;">
-  <p>
-    <a href="https://your-username.github.io/mini-flowy">← Вернуться к Mini Flowy</a> | 
-    <a href="https://your-username.github.io/mini-flowy/#/p/flowcharts">Открыть в интерактивном режиме</a>
-  </p>
-  <p><small>Создано с помощью Mini Flowy - Markdown + Mermaid просмотрщик</small></p>
-</footer>
-
-</body>
-</html>
