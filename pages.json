@@ -38,6 +38,24 @@
     "order": 0
   },
   {
+    "title": "Голосовые AI-агенты: Будущее интерфейсов уже здесь",
+    "slug": "voice-ai-agents",
+    "path": "content/ai-tools/voice-ai-agents.md",
+    "category": "AI-инструменты",
+    "icon": "🎤",
+    "tags": [
+      "ai",
+      "голос",
+      "cli",
+      "интеграция",
+      "claude-code",
+      "copilot",
+      "gemini"
+    ],
+    "public": true,
+    "order": 1
+  },
+  {
     "title": "Пример: Mermaid",
     "slug": "diagrams",
     "path": "content/examples/diagrams.md",

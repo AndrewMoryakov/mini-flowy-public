@@ -5,7 +5,7 @@
     <link>https://andrewmoryakov.github.io/mini-flowy-public/</link>
     <description>Легкий и быстрый Markdown + Mermaid просмотрщик с панорамированием и зумом диаграмм</description>
     <language>ru</language>
-    <lastBuildDate>Wed, 27 Aug 2025 13:47:49 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 30 Aug 2025 07:41:25 GMT</lastBuildDate>
     <generator>Mini Flowy v2.1.1</generator>
     <atom:link href="https://andrewmoryakov.github.io/mini-flowy-public/rss.xml" rel="self" type="application/rss+xml" />
     
@@ -15,7 +15,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/vless-xray-setup</guid>
       <description>Статья из категории "Технологии/Сетевые инструменты" в Mini Flowy</description>
       <category>Технологии/Сетевые инструменты</category>
-      <pubDate>Wed, 27 Aug 2025 13:47:49 GMT</pubDate>
+      <pubDate>Sat, 30 Aug 2025 07:41:25 GMT</pubDate>
     </item>
     <item>
       <title>🚀 Скрипты для автоматической установки VLESS/Xray</title>
@@ -23,7 +23,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/readme</guid>
       <description>Статья из категории "Технологии/Сетевые инструменты/Scripts" в Mini Flowy</description>
       <category>Технологии/Сетевые инструменты/Scripts</category>
-      <pubDate>Wed, 27 Aug 2025 13:47:49 GMT</pubDate>
+      <pubDate>Sat, 30 Aug 2025 07:41:25 GMT</pubDate>
     </item>
     <item>
       <title>Кастомные темы</title>
@@ -31,7 +31,15 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/custom-themes</guid>
       <description>Статья из категории "Advanced" в Mini Flowy</description>
       <category>Advanced</category>
-      <pubDate>Wed, 27 Aug 2025 13:47:49 GMT</pubDate>
+      <pubDate>Sat, 30 Aug 2025 07:41:25 GMT</pubDate>
+    </item>
+    <item>
+      <title>Голосовые AI-агенты: Будущее интерфейсов уже здесь</title>
+      <link>https://andrewmoryakov.github.io/mini-flowy-public/#/p/voice-ai-agents</link>
+      <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/voice-ai-agents</guid>
+      <description>Статья из категории "AI-инструменты" в Mini Flowy</description>
+      <category>AI-инструменты</category>
+      <pubDate>Sat, 30 Aug 2025 07:41:25 GMT</pubDate>
     </item>
     <item>
       <title>Пример: Mermaid</title>
@@ -39,7 +47,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/diagrams</guid>
       <description>Статья из категории "Examples" в Mini Flowy</description>
       <category>Examples</category>
-      <pubDate>Wed, 27 Aug 2025 13:47:49 GMT</pubDate>
+      <pubDate>Sat, 30 Aug 2025 07:41:25 GMT</pubDate>
     </item>
     <item>
       <title>Примеры диаграмм</title>
@@ -47,7 +55,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/flowcharts</guid>
       <description>Статья из категории "Examples" в Mini Flowy</description>
       <category>Examples</category>
-      <pubDate>Wed, 27 Aug 2025 13:47:49 GMT</pubDate>
+      <pubDate>Sat, 30 Aug 2025 07:41:25 GMT</pubDate>
     </item>
     <item>
       <title>UI компоненты</title>
@@ -55,7 +63,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/ui-components</guid>
       <description>Статья из категории "Examples" в Mini Flowy</description>
       <category>Examples</category>
-      <pubDate>Wed, 27 Aug 2025 13:47:49 GMT</pubDate>
+      <pubDate>Sat, 30 Aug 2025 07:41:25 GMT</pubDate>
     </item>
     <item>
       <title>Вступление</title>
@@ -63,7 +71,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/intro</guid>
       <description>Статья из категории "Getting Started" в Mini Flowy</description>
       <category>Getting Started</category>
-      <pubDate>Wed, 27 Aug 2025 13:47:49 GMT</pubDate>
+      <pubDate>Sat, 30 Aug 2025 07:41:25 GMT</pubDate>
     </item>
     <item>
       <title>Установка</title>
@@ -71,7 +79,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/installation</guid>
       <description>Статья из категории "Getting Started" в Mini Flowy</description>
       <category>Getting Started</category>
-      <pubDate>Wed, 27 Aug 2025 13:47:49 GMT</pubDate>
+      <pubDate>Sat, 30 Aug 2025 07:41:25 GMT</pubDate>
     </item>
     <item>
       <title>Первые шаги</title>
@@ -79,7 +87,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/first-steps</guid>
       <description>Статья из категории "Getting Started/Основы работы" в Mini Flowy</description>
       <category>Getting Started/Основы работы</category>
-      <pubDate>Wed, 27 Aug 2025 13:47:49 GMT</pubDate>
+      <pubDate>Sat, 30 Aug 2025 07:41:25 GMT</pubDate>
     </item>
     <item>
       <title>Основы Markdown</title>
@@ -87,7 +95,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/basic-markdown</guid>
       <description>Статья из категории "Tutorials" в Mini Flowy</description>
       <category>Tutorials</category>
-      <pubDate>Wed, 27 Aug 2025 13:47:49 GMT</pubDate>
+      <pubDate>Sat, 30 Aug 2025 07:41:25 GMT</pubDate>
     </item>
     <item>
       <title>Работа с Mermaid диаграммами</title>
@@ -95,7 +103,7 @@
       <guid>https://andrewmoryakov.github.io/mini-flowy-public/#/p/mermaid-diagrams</guid>
       <description>Статья из категории "Tutorials" в Mini Flowy</description>
       <category>Tutorials</category>
-      <pubDate>Wed, 27 Aug 2025 13:47:49 GMT</pubDate>
+      <pubDate>Sat, 30 Aug 2025 07:41:25 GMT</pubDate>
     </item>
   </channel>
 </rss>
